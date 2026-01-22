@@ -44,9 +44,11 @@ public class Main {
         String adopterPhoneNumber = scanner.nextLine();
         System.out.print("Age: ");
         int adopterAge = scanner.nextInt();
+        System.out.print("Want to: ");
+        String adopterWantTo = scanner.nextLine();
         scanner.nextLine();
 
-        Adopter adopter = new Adopter(adopterName, adopterAge, adopterPhoneNumber);
+        Adopter adopter = new Adopter(adopterName, adopterAge, adopterPhoneNumber, adopterWantTo);
         adopter.showInfo();
 
         System.out.print("Shelter name: ");
@@ -103,25 +105,39 @@ public class Main {
 
             System.out.println("\nConnected to DB!");
 
-            // INSERT 2 pets
             insertPet(conn, pet1.getName(), pet1.getSpecies(), pet1.getAge());
             insertPet(conn, pet2.getName(), pet2.getSpecies(), pet2.getAge());
 
-            // READ pets
+            insertAdopter(conn, adopter.getName(), adopter.getAge(),adopter.getPhoneNumber(), adopter.getWantTo());
+
             System.out.println("\nPets in database:");
             readPets(conn);
 
-            // UPDATE pet with ID = 1
-            System.out.println("\nUpdating pet age for ID = 1...");
-            updatePetAge(conn, 1, 10);
+            System.out.println("\nEnter pet ID to update age: ");
+            int updatePetId = scanner.nextInt();
+            scanner.nextLine();
+            System.out.println("\nEnter new age: ");
+            int newPetAge = scanner.nextInt();
+            scanner.nextLine();
+            updatePetAge(conn, updatePetId, newPetAge);
 
-            // DELETE pet with ID = 2
-            System.out.println("Deleting pet with ID = 2...");
-            deletePet(conn, 2);
+            System.out.println("\nEnter pet ID to delete: ");
+            int deletePetId = scanner.nextInt();
+            scanner.nextLine();
+            deletePet(conn, deletePetId);
 
-            // READ AGAIN
             System.out.println("\nPets after update/delete:");
             readPets(conn);
+
+            System.out.println("\nEnter adopter ID to update wantTo: ");
+            int updateAdopterId = scanner.nextInt();
+            scanner.nextLine();
+
+            System.out.println("\nEnter new value for wantTo: ");
+            String newAdopterWantTo = scanner.nextLine();
+            scanner.nextLine();
+
+            updateAdopter(conn, updateAdopterId, newAdopterWantTo);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -144,12 +160,7 @@ public class Main {
         ResultSet rs = st.executeQuery(sql);
 
         while (rs.next()) {
-            System.out.println(
-                    rs.getInt("id") + " | " +
-                            rs.getString("name") + " | " +
-                            rs.getString("species") + " | " +
-                            rs.getInt("age")
-            );
+            System.out.println(rs.getString("name"));
         }
     }
 
@@ -168,5 +179,25 @@ public class Main {
         ps.setInt(1, id);
         ps.executeUpdate();
         System.out.println("Pet deleted.");
+    }
+
+    public static void insertAdopter(Connection conn, String name, int age, String phone_number, String wantTo) throws SQLException{
+        String sql = "INSERT INTO adopter(name, age, phone_number, wantto) VALUES(?, ?, ?, ?) ";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, name);
+        ps.setInt(2, age);
+        ps.setString(3, phone_number);
+        ps.setString(4, wantTo);
+        ps.executeUpdate();
+        System.out.println("Inserted: " + name);
+    }
+
+    public static void updateAdopter(Connection conn, int id,  String newWantTo) throws SQLException{
+        String sql = "UPDATE adopter SET wantTo = ? where id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, newWantTo);
+        ps.setInt(2, id);
+        ps.executeUpdate();
+        System.out.println("adopter wantTo updated");
     }
 }
