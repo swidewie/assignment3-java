@@ -3,14 +3,20 @@ package models;
 import java.util.Objects;
 
 public class Pet {
+    private int id;
     private String name;
     private String species;
     private int age;
+    private String color;
 
-    public Pet(String name, String species, int age){
+    public Pet() {}
+
+    public Pet(String name, String species, int age, String color){
         this.name=name;
         this.species = species;
         this.age = age;
+        this.color = color;
+
     }
     public String getName(){
         return name;
@@ -21,6 +27,13 @@ public class Pet {
     public int getAge(){
         return age;
     }
+
+    public String getColor(){
+        return color;
+    }
+
+    public int getId() {
+        return id; }
 
     public void setName(String name) {
         this.name = name;
@@ -34,9 +47,15 @@ public class Pet {
         this.age = age;
     }
 
+    public void setColor(String color){
+        this.color = color;
+    }
+
+    public void setId(int id) { this.id = id; }
+
     @Override
     public String toString(){
-        return "Pet name: " + name + ", information: " + species +", " + age + "years old";
+        return "Pet name: " + name + ", information: " + species +", " + age + "years old" + ", pet color: " + color;
     }
 
     @Override
@@ -48,11 +67,11 @@ public class Pet {
             return false;
         }
         Pet p = (Pet) o;
-        return age == p.age && name.equals(p.name) && species.equals(p.species);
+        return age == p.age && name.equals(p.name) && species.equals(p.species) && color.equals(p.color);
     }
 
     @Override
     public int hashCode(){
-        return Objects.hash(name, species, age);
+        return Objects.hash(name, species, age, color);
     }
 }

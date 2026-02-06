@@ -4,6 +4,8 @@ public class Adopter extends Person {
     private String phoneNumber;
     private String WantTo;
 
+    public Adopter() { super("", 0); }
+
     public Adopter(String name, int age, String phoneNumber, String WantTo) {
         super(name, age);
         this.phoneNumber = phoneNumber;
